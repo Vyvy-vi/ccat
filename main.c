@@ -13,7 +13,7 @@ struct cmdFlags {
 	bool blankOmitNumber;
 };
 
-void read_stdin2_stdout(struct cmdFlags flags) {
+void read_stdin2_stdout() {
 	while (1) {
 		size_t cnt = fread(&buffer, sizeof(char), BUFFER_SIZE - 1, stdin);
 		buffer[cnt] = '\0';
@@ -26,7 +26,7 @@ void read_stdin2_stdout(struct cmdFlags flags) {
 
 }
 
-void readFile2_stdout(char* filename) {
+void readFile2_stdout(char* filename, struct cmdFlags flags) {
 	FILE* filePtr = fopen(filename, "r");
 
 	while (!feof(filePtr)) {
@@ -48,15 +48,15 @@ int main(int argc, char **argv) {
 		int argIndex = 1;
 
 		while (argIndex < argc) {
-			char arg = argv[argIndex];
+			char* arg = argv[argIndex];
 			if (arg[0] != '-') break;
-			else if (arg[1] == 'n') cmdFlags.number = true;
-			else if (arg[1] == 'b') cmdFlags.blankOmitNumber = true;
+			else if (arg[1] == 'n') flags.number = true;
+			else if (arg[1] == 'b') flags.blankOmitNumber = true;
 			argIndex++;
 		}
 		
 		while (argIndex < argc) {
-			readFile2_stdout(argv[argIndex]);
+			readFile2_stdout(argv[argIndex], flags);
 			argIndex++;
 		}
 	}
